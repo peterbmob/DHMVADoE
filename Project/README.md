@@ -1,7 +1,17 @@
 
 # Project in the course Design of Experiemnts, Data Handling and Statistical Analysis for Material Scientists
 
-matminer is a Python library for data mining the properties of materials.
+# Task:
+1. Choose a suitable material property.
+2. Investigate what features are important to describe it. 
+3. Build a model with as few variables as possible that describe the property you selected.
+4. Predict/optimize the property at hand... here you must have an "imaginary" application for the property you have choosen. Try to figure out a case where you want a certain value for the proerty at hand.
+
+
+In the report, I want to see how you set up the workflow (from data aqcuisition to sharing the results) for solving the problem. Try to write an introduction from a materials science point of view.
+
+# How do I proceed?
+[Matminer](https://hackingmaterials.lbl.gov/matminer/) is a Python library for data mining the properties of materials.
 
 Matminer contains routines for 40+ datasets (described [here](https://hackingmaterials.lbl.gov/matminer/dataset_summary.html))
 
@@ -32,20 +42,13 @@ The datasets available by loading the following modules:
 - load_steel_strength()
 - load_wolverton_oxides()
 
+Other sources of data are for example [Materials Project](https://next-gen.materialsproject.org/). 
 
-
-## Task:
-1. Choose a suitable material property.
-2. Investigate what features are important to describe it. 
-3. Build a model with as few variables as possible that describe the property you selected.
-4. Predict/optimize the property at hand... here you must have an "imaginary" application for the property you have choosen. Try to figure out a case where you want a certain value for the proerty at hand.
-
-
-In the report, I want to see how you set up the workflow (from data aqcuisition to sharing the results) for solving the problem. Try to write an introduction from a materials science point of view.
-
-
-# Hints: 
-
+# Hints for matminer environment: 
+## installation: 
+```
+pip install matminer 
+```
 ## Available datasets: 
 
 ```
@@ -72,8 +75,13 @@ df = load_elastic_tensor()  # loads dataset in a pandas DataFrame object
 ```
 ## Watch the data
 
+Use seaborn of ydata profiling
 
-
+installation: 
+```
+pip install ydata-profiling
+```
+Create Report: 
 ```
 from ydata_profiling import ProfileReport
 
@@ -132,11 +140,15 @@ df
 
 ```
 
-which can thereafter be used with the CBFV package. 
+An other examples of software for featurization is the CBFV package. 
 
+Installation: 
+```
+!pip install CBFV
+```
+How to se (see manual for more): 
 ```
 from CBFV.composition import generate_features
 X_train, y_train, formulae_train, skipped_train = generate_features(df_train, elem_prop='oliynyk', drop_duplicates=False, extend_features=True, sum_feat=True)
-
 ```
 From here, we dive in to our multiregression/multivariate analysis tasks to build our model. 
