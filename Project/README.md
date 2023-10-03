@@ -42,3 +42,101 @@ The datasets available by loading the following modules:
 
 
 In the report, I want to see how you set up the workflow (from data aqcuisition to sharing the results) for solving the problem. Try to write an introduction from a materials science point of view.
+
+
+# Hints: 
+
+## Available datasets: 
+
+```
+from matminer.datasets import get_available_datasets
+
+get_available_datasets()
+```
+
+## Info about data set: 
+
+
+```
+from matminer.datasets import get_all_dataset_info
+
+print(get_all_dataset_info("expt_gap"))
+```
+
+## load the data set:
+
+```
+from matminer.datasets.convenience_loaders import load_elastic_tensor
+df = load_elastic_tensor()  # loads dataset in a pandas DataFrame object
+
+```
+## Watch the data
+
+
+
+```
+from ydata_profiling import ProfileReport
+
+profile = ProfileReport(df, title="Profiling Report")
+
+profile.to_notebook_iframe()
+```
+
+
+
+## Watch columns:
+
+
+
+```
+df.head()
+```
+
+## Drop unwanted columns:
+
+
+```
+unwanted_columns = ["volume", "nsites", "compliance_tensor", "elastic_tensor",
+                    "elastic_tensor_original", "K_Voigt", "G_Voigt", "K_Reuss", "G_Reuss"]
+df = df.drop(unwanted_columns, axis=1)
+```
+
+## Filtering 
+
+```
+mask = df["gap expt"] > 0
+nonmetal_df = df[mask]
+nonmetal_df
+```
+
+
+## Featurization
+
+Matminer has its own featurizer described [here](https://hackingmaterials.lbl.gov/matminer/featurizer_summary.html). More features can be obtained using the [CBFV package](https://github.com/Kaaiian/CBFV).
+
+
+Here is an example using the column formula in the dataset 'expt_gap' to find the composition: 
+```
+from pymatgen.core import Composition
+from matminer.featurizers.composition.element import ElementFraction
+
+ef = ElementFraction()
+
+ff=[]
+for formel in df['formula']:
+  ff.append(Composition(formel))
+
+df['composition']=ff
+            
+df
+
+```
+
+which can thereafter be used with the CBFV package. 
+
+```
+from CBFV.composition import generate_features
+X_train, y_train, formulae_train, skipped_train = generate_features(df_train, elem_prop='oliynyk', drop_duplicates=False, extend_features=True, sum_feat=True)
+
+```
+From here, we dive in to our multiregression/multivariate analysis tasks to build our model. 
